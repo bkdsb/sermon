@@ -1,0 +1,43 @@
+"use client";
+
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { getVerse } from "@/lib/bible/getBible";
+import type { BibleVerseId } from "@/lib/bible/types";
+
+interface RefTagProps {
+  verseRef: BibleVerseId;
+}
+
+export default function RefTag({ verseRef }: RefTagProps) {
+  const router = useRouter();
+
+  const parsed = useMemo(() => {
+    const [book, chapterRaw, verseRaw] = verseRef.split(".");
+    const chapter = Number.parseInt(chapterRaw, 10);
+    const verse = Number.parseInt(verseRaw, 10);
+    return { book, chapter, verse };
+  }, [verseRef]);
+
+  const verseText = useMemo(() => getVerse(parsed.book, parsed.chapter, parsed.verse), [parsed]);
+
+  const handleClick = () => {
+    router.push(`/biblia/${parsed.book}/${parsed.chapter}#v${parsed.verse}`);
+  };
+
+  return (
+    <span className="group relative inline-flex">
+      <button
+        type="button"
+        onClick={handleClick}
+        className="inline-flex items-center rounded-md border border-[var(--border)] bg-white px-2 py-0.5 text-xs font-semibold text-[var(--primary)] transition hover:bg-[var(--primary)] hover:text-white"
+      >
+        [{verseRef}]
+      </button>
+
+      <span className="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-72 rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 text-left text-xs leading-relaxed text-[var(--foreground)] shadow-lg group-hover:block">
+        {verseText ?? "Versículo não encontrado no dataset local."}
+      </span>
+    </span>
+  );
+}
