@@ -8,6 +8,10 @@ import type { BibleVersion } from "@/lib/bible/types";
 const OT_BOOKS_COUNT = 39;
 
 type Testament = "AT" | "NT";
+const TESTAMENT_DEFAULT_BOOK: Record<Testament, string> = {
+  AT: "gn",
+  NT: "mt"
+};
 
 interface BibleNavigatorProps {
   version: BibleVersion;
@@ -102,7 +106,8 @@ export default function BibleNavigator({ version, currentBook, currentChapter }:
                 type="button"
                 onClick={() => {
                   setActiveTestament(testament);
-                  setIsBooksOpen(true);
+                  setIsBooksOpen(false);
+                  router.push(`/biblia/${TESTAMENT_DEFAULT_BOOK[testament]}/1`);
                 }}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                   active ? "bg-[var(--primary)] text-white shadow-sm" : "text-[var(--muted)] hover:bg-[#f2ecdf]"

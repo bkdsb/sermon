@@ -20,7 +20,7 @@ export default function HomePage() {
             Novo sermão
           </Link>
           <Link
-            href="/biblia/jo/11"
+            href="/biblia/gn/1"
             className="inline-flex items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
           >
             Abrir Bíblia

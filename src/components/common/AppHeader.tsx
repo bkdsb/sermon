@@ -39,7 +39,7 @@ export default function AppHeader() {
           </Link>
 
           <nav className="hidden items-center gap-1 rounded-xl border border-[var(--border)] bg-white/80 p-1 text-sm font-semibold md:flex">
-            <Link href="/biblia/jo/1" className="rounded-lg px-3 py-1.5 text-[var(--muted)] transition hover:bg-[var(--card)] hover:text-[var(--primary)]">
+            <Link href="/biblia/gn/1" className="rounded-lg px-3 py-1.5 text-[var(--muted)] transition hover:bg-[var(--card)] hover:text-[var(--primary)]">
               Bíblia
             </Link>
             <Link href="/sermoes" className="rounded-lg px-3 py-1.5 text-[var(--muted)] transition hover:bg-[var(--card)] hover:text-[var(--primary)]">
