@@ -1,14 +1,15 @@
 import Verse from "@/components/bible/Verse";
 import { getChapter, getCrossRefs } from "@/lib/bible/getBible";
-import type { BibleVerseId } from "@/lib/bible/types";
+import type { BibleVerseId, BibleVersion } from "@/lib/bible/types";
 
 interface BibleChapterProps {
   book: string;
   chapter: number;
+  version: BibleVersion;
 }
 
-export default function BibleChapter({ book, chapter }: BibleChapterProps) {
-  const verses = getChapter(book, chapter);
+export default function BibleChapter({ book, chapter, version }: BibleChapterProps) {
+  const verses = getChapter(book, chapter, version);
 
   if (!verses || verses.length === 0) {
     return (
@@ -23,7 +24,7 @@ export default function BibleChapter({ book, chapter }: BibleChapterProps) {
       {verses.map((text, index) => {
         const verseNumber = index + 1;
         const id = `${book}.${chapter}.${verseNumber}` as BibleVerseId;
-        const crossRefs = getCrossRefs(id);
+        const crossRefs = getCrossRefs(id, version);
 
         return <Verse key={id} id={id} verseNumber={verseNumber} text={text} crossRefs={crossRefs} />;
       })}

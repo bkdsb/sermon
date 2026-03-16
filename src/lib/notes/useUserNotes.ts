@@ -85,6 +85,8 @@ export function useUserNotes() {
   }, []);
 
   const updateNote = useCallback(async (id: string, payload: UpdateNoteInput) => {
+    const userId = await getCurrentUserId();
+
     const { data, error } = await supabase
       .from("notes")
       .update({
@@ -92,6 +94,7 @@ export function useUserNotes() {
         updated_at: new Date().toISOString()
       })
       .eq("id", id)
+      .eq("user_id", userId)
       .select("id,user_id,title,content,created_at,updated_at")
       .single();
 
@@ -103,7 +106,8 @@ export function useUserNotes() {
   }, []);
 
   const deleteNote = useCallback(async (id: string) => {
-    const { error } = await supabase.from("notes").delete().eq("id", id);
+    const userId = await getCurrentUserId();
+    const { error } = await supabase.from("notes").delete().eq("id", id).eq("user_id", userId);
     if (error) throw error;
 
     setNotes((prev) => prev.filter((note) => note.id !== id));

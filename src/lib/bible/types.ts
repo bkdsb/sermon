@@ -1,4 +1,5 @@
 export type BibleVerseId = `${string}.${number}.${number}`;
+export type BibleVersion = "acf" | "ara";
 
 export interface BibleBook {
   abbrev: string;

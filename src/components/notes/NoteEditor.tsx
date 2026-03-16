@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { useBibleVersion } from "@/lib/bible/BibleVersionContext";
 import { getAtTokenFromText } from "@/lib/editor/getAtToken";
 import { useVerseSuggestions } from "@/lib/bible/useVerseSuggestions";
 
@@ -12,10 +13,11 @@ interface NoteEditorProps {
 
 export default function NoteEditor({ value, onChange, placeholder }: NoteEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { version } = useBibleVersion();
   const [cursorPos, setCursorPos] = useState(0);
 
   const atToken = useMemo(() => getAtTokenFromText(value, cursorPos), [value, cursorPos]);
-  const suggestions = useVerseSuggestions(atToken?.text ?? "");
+  const suggestions = useVerseSuggestions(atToken?.text ?? "", version);
   const shouldShowSuggestions = Boolean(atToken && suggestions.length > 0);
 
   const syncCursor = (nextPos: number | null) => {

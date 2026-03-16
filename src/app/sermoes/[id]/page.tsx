@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import AuthGuard from "@/components/auth/AuthGuard";
 import RefTag from "@/components/common/RefTag";
 import { supabase } from "@/lib/supabaseClient";
 import type { BibleVerseId } from "@/lib/bible/types";
@@ -63,10 +64,22 @@ export default function SermaoDetalhePage() {
       setLoading(true);
       setError(null);
 
+      const {
+        data: { user }
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setError("Sessão expirada. Faça login novamente.");
+        setNote(null);
+        setLoading(false);
+        return;
+      }
+
       const { data, error: queryError } = await supabase
         .from("notes")
         .select("id,user_id,title,content,created_at,updated_at")
         .eq("id", noteId)
+        .eq("user_id", user.id)
         .single();
 
       if (queryError) {
@@ -89,29 +102,31 @@ export default function SermaoDetalhePage() {
   }, [note]);
 
   return (
-    <section className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
-      {loading ? <p className="text-sm text-[var(--muted)]">Carregando sermão...</p> : null}
+    <AuthGuard>
+      <section className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+        {loading ? <p className="text-sm text-[var(--muted)]">Carregando sermão...</p> : null}
 
-      {!loading && error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
+        {!loading && error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}
 
-      {!loading && note ? (
-        <>
-          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] pb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-[var(--primary)]">{note.title}</h1>
-              <p className="mt-1 text-xs text-[var(--muted)]">Atualizado em {new Date(note.updated_at).toLocaleString("pt-BR")}</p>
-            </div>
-            <Link
-              href={`/sermoes/${note.id}/editar`}
-              className="inline-flex items-center rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-semibold transition hover:bg-black/5"
-            >
-              Editar
-            </Link>
-          </header>
+        {!loading && note ? (
+          <>
+            <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] pb-4">
+              <div>
+                <h1 className="text-2xl font-bold text-[var(--primary)]">{note.title}</h1>
+                <p className="mt-1 text-xs text-[var(--muted)]">Atualizado em {new Date(note.updated_at).toLocaleString("pt-BR")}</p>
+              </div>
+              <Link
+                href={`/sermoes/${note.id}/editar`}
+                className="inline-flex items-center rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-semibold transition hover:bg-black/5"
+              >
+                Editar
+              </Link>
+            </header>
 
-          <article className="rounded-xl border border-[var(--border)] bg-white p-4 text-sm text-[var(--foreground)]">{renderedContent}</article>
-        </>
-      ) : null}
-    </section>
+            <article className="rounded-xl border border-[var(--border)] bg-white p-4 text-sm text-[var(--foreground)]">{renderedContent}</article>
+          </>
+        ) : null}
+      </section>
+    </AuthGuard>
   );
 }

@@ -1,4 +1,5 @@
-import { getBible } from "./getBible";
+import { DEFAULT_BIBLE_VERSION, getBible } from "./getBible";
+import type { BibleVersion } from "./types";
 
 export type VerseDoc = {
   id: string;
@@ -8,16 +9,17 @@ export type VerseDoc = {
   text: string;
 };
 
-let cachedIndex: VerseDoc[] | null = null;
+const cachedByVersion = new Map<BibleVersion, VerseDoc[]>();
 
-export function buildVerseIndex(): VerseDoc[] {
-  if (cachedIndex) {
-    return cachedIndex;
+export function buildVerseIndex(version: BibleVersion = DEFAULT_BIBLE_VERSION): VerseDoc[] {
+  const cached = cachedByVersion.get(version);
+  if (cached) {
+    return cached;
   }
 
   const docs: VerseDoc[] = [];
 
-  for (const book of getBible()) {
+  for (const book of getBible(version)) {
     for (let chapterIndex = 0; chapterIndex < book.chapters.length; chapterIndex += 1) {
       const chapter = book.chapters[chapterIndex];
       const chapterNumber = chapterIndex + 1;
@@ -35,6 +37,6 @@ export function buildVerseIndex(): VerseDoc[] {
     }
   }
 
-  cachedIndex = docs;
+  cachedByVersion.set(version, docs);
   return docs;
 }

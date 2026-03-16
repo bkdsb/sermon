@@ -1,8 +1,9 @@
+import { DEFAULT_BIBLE_VERSION } from "./getBible";
 import { useMemo } from "react";
 import { getVerse } from "./getBible";
 import { parseRef } from "./parseReference";
 import { searchVersesFuzzy } from "./verseSearch";
-import type { BibleVerseId } from "./types";
+import type { BibleVerseId, BibleVersion } from "./types";
 
 export interface VerseSuggestion {
   id: BibleVerseId;
@@ -10,14 +11,17 @@ export interface VerseSuggestion {
   text: string;
 }
 
-export function useVerseSuggestions(triggerText: string): VerseSuggestion[] {
+export function useVerseSuggestions(
+  triggerText: string,
+  version: BibleVersion = DEFAULT_BIBLE_VERSION
+): VerseSuggestion[] {
   return useMemo(() => {
     const query = triggerText.trim();
     if (!query) return [];
 
-    const parsed = parseRef(query);
+    const parsed = parseRef(query, version);
     if (parsed) {
-      const verseText = getVerse(parsed.book, parsed.chapter, parsed.verse);
+      const verseText = getVerse(parsed.book, parsed.chapter, parsed.verse, version);
       if (!verseText) return [];
 
       return [
@@ -29,10 +33,10 @@ export function useVerseSuggestions(triggerText: string): VerseSuggestion[] {
       ];
     }
 
-    return searchVersesFuzzy(query, 8).map((doc) => ({
+    return searchVersesFuzzy(query, 8, version).map((doc) => ({
       id: doc.id as BibleVerseId,
       label: `${doc.book.toUpperCase()} ${doc.chapter}:${doc.verse}`,
       text: doc.text
     }));
-  }, [triggerText]);
+  }, [triggerText, version]);
 }

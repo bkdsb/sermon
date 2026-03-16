@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useBibleVersion } from "@/lib/bible/BibleVersionContext";
 import { getVerse } from "@/lib/bible/getBible";
 import type { BibleVerseId } from "@/lib/bible/types";
 
@@ -11,6 +12,7 @@ interface RefTagProps {
 
 export default function RefTag({ verseRef }: RefTagProps) {
   const router = useRouter();
+  const { version } = useBibleVersion();
 
   const parsed = useMemo(() => {
     const [book, chapterRaw, verseRaw] = verseRef.split(".");
@@ -19,7 +21,7 @@ export default function RefTag({ verseRef }: RefTagProps) {
     return { book, chapter, verse };
   }, [verseRef]);
 
-  const verseText = useMemo(() => getVerse(parsed.book, parsed.chapter, parsed.verse), [parsed]);
+  const verseText = useMemo(() => getVerse(parsed.book, parsed.chapter, parsed.verse, version), [parsed, version]);
 
   const handleClick = () => {
     router.push(`/biblia/${parsed.book}/${parsed.chapter}#v${parsed.verse}`);
