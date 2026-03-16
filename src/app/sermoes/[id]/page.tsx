@@ -103,7 +103,7 @@ export default function SermaoDetalhePage() {
 
   return (
     <AuthGuard>
-      <section className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+      <section className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_12px_28px_rgba(28,35,46,0.08)]">
         {loading ? <p className="text-sm text-[var(--muted)]">Carregando sermão...</p> : null}
 
         {!loading && error ? <p className="text-sm font-medium text-red-700">{error}</p> : null}

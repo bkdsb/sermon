@@ -91,7 +91,7 @@ export default function BibleNavigator({ version, currentBook, currentChapter }:
   };
 
   return (
-    <section className="space-y-3 rounded-xl border border-[var(--border)] bg-white/70 p-4">
+    <section className="space-y-3 rounded-2xl border border-[var(--border)] bg-white/75 p-4 backdrop-blur-sm">
       <div className="flex flex-wrap items-center gap-2">
         <div className="inline-flex rounded-xl border border-[var(--border)] bg-white p-1">
           {(["AT", "NT"] as Testament[]).map((testament) => {
@@ -105,7 +105,7 @@ export default function BibleNavigator({ version, currentBook, currentChapter }:
                   setIsBooksOpen(true);
                 }}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                  active ? "bg-[var(--primary)] text-white" : "text-[var(--muted)] hover:bg-black/5"
+                  active ? "bg-[var(--primary)] text-white shadow-sm" : "text-[var(--muted)] hover:bg-[#f2ecdf]"
                 }`}
               >
                 {testament}
@@ -117,12 +117,12 @@ export default function BibleNavigator({ version, currentBook, currentChapter }:
         <button
           type="button"
           onClick={() => setIsBooksOpen((open) => !open)}
-          className="rounded-xl border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] transition hover:bg-black/5"
+          className="rounded-xl border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
         >
           {isBooksOpen ? "Fechar livros" : "Livros"}
         </button>
 
-        <label className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+        <label className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
           Capítulo
           <select
             value={String(currentChapter)}
@@ -137,7 +137,7 @@ export default function BibleNavigator({ version, currentBook, currentChapter }:
           </select>
         </label>
 
-        <label className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+        <label className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
           Versículo
           <select
             value={selectedVerse}
@@ -174,7 +174,7 @@ export default function BibleNavigator({ version, currentBook, currentChapter }:
                   className={`rounded-lg border px-2 py-1.5 text-xs font-semibold transition ${
                     isCurrent
                       ? "border-[var(--primary)] bg-[var(--primary)] text-white"
-                      : "border-[var(--border)] bg-white text-[var(--foreground)] hover:bg-black/5"
+                      : "border-[var(--border)] bg-white text-[var(--foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
                   }`}
                 >
                   {book.abbrev.toUpperCase()}

@@ -37,16 +37,16 @@ export default function BibleChapterPage() {
 
   if (!parsed) {
     return (
-      <section className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+      <section className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_10px_24px_rgba(28,35,46,0.08)]">
         <p className="text-sm text-[var(--muted)]">Livro/capítulo inválido para a tradução selecionada.</p>
       </section>
     );
   }
 
   return (
-    <section className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+    <section className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_12px_28px_rgba(28,35,46,0.08)]">
       <header className="flex flex-wrap items-end justify-between gap-3 border-b border-[var(--border)] pb-4">
-        <h1 className="text-2xl font-bold text-[var(--primary)]">
+        <h1 className="text-3xl font-bold text-[var(--primary)]">
           {parsed.bookName} {parsed.chapter}
         </h1>
         <BibleVersionSwitcher />

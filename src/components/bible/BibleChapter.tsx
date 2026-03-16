@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef } from "react";
+import type { ClipboardEvent } from "react";
 import Verse from "@/components/bible/Verse";
 import { getChapter, getCrossRefs } from "@/lib/bible/getBible";
 import type { BibleVerseId, BibleVersion } from "@/lib/bible/types";
@@ -36,7 +37,7 @@ export default function BibleChapter({ book, bookName, chapter, version }: Bible
     );
   }
 
-  const handleCopy = (event: React.ClipboardEvent<HTMLElement>) => {
+  const handleCopy = (event: ClipboardEvent<HTMLElement>) => {
     const root = chapterRef.current;
     if (!root) return;
 
@@ -74,7 +75,7 @@ export default function BibleChapter({ book, bookName, chapter, version }: Bible
   };
 
   return (
-    <section ref={chapterRef} onCopy={handleCopy} className="space-y-1">
+    <section ref={chapterRef} onCopy={handleCopy} className="space-y-1.5">
       {verseItems.map((verse) => (
         <Verse
           key={verse.id}

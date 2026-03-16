@@ -32,12 +32,12 @@ export default function RefTag({ verseRef }: RefTagProps) {
       <button
         type="button"
         onClick={handleClick}
-        className="inline-flex items-center rounded-md border border-[var(--border)] bg-white px-2 py-0.5 text-xs font-semibold text-[var(--primary)] transition hover:bg-[var(--primary)] hover:text-white"
+        className="inline-flex items-center rounded-lg border border-[var(--border)] bg-white px-2 py-0.5 text-xs font-semibold text-[var(--primary)] transition hover:border-[var(--primary)] hover:bg-[#f7f2e8]"
       >
         [{verseRef}]
       </button>
 
-      <span className="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-72 rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 text-left text-xs leading-relaxed text-[var(--foreground)] shadow-lg group-hover:block">
+      <span className="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-72 rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 text-left text-xs leading-relaxed text-[var(--foreground)] shadow-[0_10px_24px_rgba(24,31,42,0.14)] group-hover:block">
         {verseText ?? "Versículo não encontrado no dataset local."}
       </span>
     </span>

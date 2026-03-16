@@ -66,7 +66,7 @@ export default function NoteEditor({ value, onChange, placeholder }: NoteEditorP
       />
 
       {shouldShowSuggestions ? (
-        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-lg">
+        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-[0_10px_24px_rgba(24,31,42,0.14)]">
           <ul className="max-h-64 overflow-y-auto">
             {suggestions.map((suggestion) => (
               <li key={suggestion.id}>
@@ -74,7 +74,7 @@ export default function NoteEditor({ value, onChange, placeholder }: NoteEditorP
                   type="button"
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => replaceTokenWithReference(suggestion.id)}
-                  className="flex w-full flex-col gap-1 border-b border-[var(--border)] px-3 py-2 text-left transition last:border-b-0 hover:bg-black/5"
+                  className="flex w-full flex-col gap-1 border-b border-[var(--border)] px-3 py-2 text-left transition last:border-b-0 hover:bg-[#f2ecdf]"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">{suggestion.label}</span>
                   <span className="text-sm text-[var(--foreground)]">{suggestion.text}</span>

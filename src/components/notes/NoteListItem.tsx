@@ -12,7 +12,7 @@ export default function NoteListItem({ note }: NoteListItemProps) {
     <li>
       <Link
         href={`/sermoes/${note.id}`}
-        className="block rounded-xl border border-[var(--border)] bg-white px-4 py-3 transition hover:-translate-y-0.5 hover:shadow-sm"
+        className="block rounded-2xl border border-[var(--border)] bg-white px-4 py-3 transition hover:-translate-y-0.5 hover:border-[var(--primary)] hover:shadow-[0_10px_20px_rgba(28,35,46,0.08)]"
       >
         <div className="flex items-start justify-between gap-4">
           <h3 className="text-base font-semibold text-[var(--foreground)]">{note.title}</h3>

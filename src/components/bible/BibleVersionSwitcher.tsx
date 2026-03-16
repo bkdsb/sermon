@@ -16,7 +16,7 @@ export default function BibleVersionSwitcher({ compact = false }: BibleVersionSw
   const { version, setVersion } = useBibleVersion();
 
   return (
-    <label className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+    <label className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
       {!compact ? "Tradução" : null}
       <select
         value={version}

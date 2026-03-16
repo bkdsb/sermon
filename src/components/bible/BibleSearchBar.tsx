@@ -26,9 +26,9 @@ export default function BibleSearchBar({ version }: BibleSearchBarProps) {
   }, [trimmedQuery, version]);
 
   return (
-    <section className="space-y-3 rounded-xl border border-[var(--border)] bg-white/70 p-4">
+    <section className="space-y-3 rounded-2xl border border-[var(--border)] bg-white/75 p-4 backdrop-blur-sm">
       <div className="space-y-1">
-        <label htmlFor="bible-search" className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+        <label htmlFor="bible-search" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
           Buscar na Bíblia
         </label>
         <input
@@ -51,18 +51,20 @@ export default function BibleSearchBar({ version }: BibleSearchBarProps) {
               <li key={`${result.doc.id}-${result.kind}`}>
                 <Link
                   href={`/biblia/${result.doc.book}/${result.doc.chapter}#v${result.doc.verse}`}
-                  className="block rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 transition hover:bg-black/5"
+                  className="block rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2 transition hover:border-[var(--primary)] hover:bg-white"
                 >
                   <div className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className="font-semibold text-[var(--primary)]">{index + 1}.</span>
+                    <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-[var(--border)] bg-[#f7f2e8] px-1.5 font-semibold text-[var(--primary)]">
+                      {index + 1}
+                    </span>
                     <span className="font-semibold uppercase tracking-wide text-[var(--primary)]">
                       {result.doc.book.toUpperCase()} {result.doc.chapter}:{result.doc.verse}
                     </span>
-                    <span className="rounded-full border border-[var(--border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                    <span className="rounded-full bg-[rgba(33,53,79,0.08)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--primary)]">
                       {KIND_LABEL[result.kind]}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-[var(--foreground)]">{result.doc.text}</p>
+                  <p className="mt-1 text-sm leading-6 text-[var(--foreground)]">{result.doc.text}</p>
                 </Link>
               </li>
             ))}

@@ -1,20 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #f4f4ef;
-  --foreground: #1a1a1a;
-  --card: #fefcf5;
-  --muted: #6b6658;
-  --primary: #374f3d;
-  --border: #d8d3c2;
+  --background: #f4eee3;
+  --foreground: #1f2733;
+  --card: #fffcf7;
+  --muted: #5f625f;
+  --primary: #21354f;
+  --primary-soft: #344d6e;
+  --accent-crimson: #7f233f;
+  --accent-olive: #566245;
+  --accent-gold: #a69063;
+  --border: #d5cab5;
+  --ring: #2b4565;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  background: radial-gradient(circle at 10% 10%, #fffaf0 0%, var(--background) 45%, #ece7d8 100%);
+  background:
+    radial-gradient(50rem 34rem at -8% -14%, rgba(127, 35, 63, 0.14), transparent 72%),
+    radial-gradient(55rem 36rem at 112% -18%, rgba(86, 98, 69, 0.13), transparent 74%),
+    linear-gradient(180deg, #f7f2e9 0%, var(--background) 100%);
   color: var(--foreground);
-  font-family: "Source Serif 4", "Merriweather", "Georgia", serif;
-  min-height: 100vh;
+  font-family: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(7rem 9rem at 12% 16%, rgba(127, 35, 63, 0.08), transparent 70%),
+    radial-gradient(7rem 9rem at 18% 12%, rgba(86, 98, 69, 0.08), transparent 72%),
+    radial-gradient(7rem 9rem at 84% 15%, rgba(127, 35, 63, 0.07), transparent 70%),
+    radial-gradient(7rem 9rem at 90% 11%, rgba(86, 98, 69, 0.07), transparent 72%);
+  opacity: 0.7;
+  z-index: -1;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Cardo", "Iowan Old Style", "Times New Roman", serif;
+  letter-spacing: 0.01em;
+}
+
+::selection {
+  background: rgba(127, 35, 63, 0.22);
+  color: #1b1b1b;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--ring) 24%, transparent);
 }
 
 * {

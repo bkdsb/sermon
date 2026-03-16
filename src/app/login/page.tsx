@@ -57,7 +57,7 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="mx-auto w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+    <section className="mx-auto w-full max-w-md rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_12px_28px_rgba(28,35,46,0.08)]">
       <header className="mb-5 border-b border-[var(--border)] pb-4">
         <h1 className="text-2xl font-bold text-[var(--primary)]">Acesso</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">Entre para criar e editar seus sermões.</p>
