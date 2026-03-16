@@ -19,7 +19,7 @@ export default function AppHeader() {
   return (
     <header className="mb-8 rounded-3xl border border-[var(--border)] bg-[var(--card)] px-5 py-4 shadow-[0_12px_30px_rgba(27,33,43,0.08)] backdrop-blur-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-4">
           <Link href="/" className="group inline-flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--border)] bg-white shadow-[0_6px_14px_rgba(32,40,53,0.1)]">
               <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden>
@@ -38,7 +38,7 @@ export default function AppHeader() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 rounded-xl border border-[var(--border)] bg-white/80 p-1 text-sm font-semibold sm:flex">
+          <nav className="hidden items-center gap-1 rounded-xl border border-[var(--border)] bg-white/80 p-1 text-sm font-semibold md:flex">
             <Link href="/biblia/jo/1" className="rounded-lg px-3 py-1.5 text-[var(--muted)] transition hover:bg-[var(--card)] hover:text-[var(--primary)]">
               Bíblia
             </Link>
@@ -48,7 +48,7 @@ export default function AppHeader() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <BibleVersionSwitcher compact />
 
           {loading ? (

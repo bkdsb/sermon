@@ -52,11 +52,16 @@ export default function BibleChapterPage() {
         <BibleVersionSwitcher />
       </header>
 
-      <BibleNavigator version={version} currentBook={parsed.book} currentChapter={parsed.chapter} />
+      <div className="grid gap-4 lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start">
+        <aside className="space-y-4 lg:sticky lg:top-5">
+          <BibleNavigator version={version} currentBook={parsed.book} currentChapter={parsed.chapter} />
+          <BibleSearchBar version={version} />
+        </aside>
 
-      <BibleSearchBar version={version} />
-
-      <BibleChapter book={parsed.book} bookName={parsed.bookName} chapter={parsed.chapter} version={version} />
+        <div className="rounded-2xl border border-[var(--border)] bg-white/65 p-3 backdrop-blur-sm sm:p-4">
+          <BibleChapter book={parsed.book} bookName={parsed.bookName} chapter={parsed.chapter} version={version} />
+        </div>
+      </div>
     </section>
   );
 }
