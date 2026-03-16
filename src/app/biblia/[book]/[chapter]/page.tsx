@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import BibleChapter from "@/components/bible/BibleChapter";
+import BibleSearchBar from "@/components/bible/BibleSearchBar";
 import BibleVersionSwitcher from "@/components/bible/BibleVersionSwitcher";
 import { useBibleVersion } from "@/lib/bible/BibleVersionContext";
 import { getBook, getChapter } from "@/lib/bible/getBible";
@@ -49,6 +50,8 @@ export default function BibleChapterPage() {
         </h1>
         <BibleVersionSwitcher />
       </header>
+
+      <BibleSearchBar version={version} />
 
       <BibleChapter book={parsed.book} chapter={parsed.chapter} version={version} />
     </section>
