@@ -8,6 +8,7 @@ const fuseByVersion = new Map<BibleVersion, Fuse<VerseDoc>>();
 const docsByVersion = new Map<BibleVersion, VerseDoc[]>();
 const orderByVerseIdByVersion = new Map<BibleVersion, Map<string, number>>();
 const normalizedTextByVersion = new Map<BibleVersion, string[]>();
+const tokenIndexByVersion = new Map<BibleVersion, Map<string, number[]>>();
 
 export type VerseSearchMatchKind = "reference_exact" | "reference_neighbor" | "text_exact" | "text_fuzzy";
 
@@ -24,7 +25,7 @@ function getFuse(version: BibleVersion) {
 
   const fuse = new Fuse(buildVerseIndex(version), {
     includeScore: true,
-    threshold: 0.36,
+    threshold: 0.42,
     ignoreLocation: true,
     minMatchCharLength: 2,
     keys: [
@@ -78,6 +79,56 @@ function getNormalizedTexts(version: BibleVersion) {
   return normalized;
 }
 
+function getTokenIndex(version: BibleVersion) {
+  const existing = tokenIndexByVersion.get(version);
+  if (existing) return existing;
+
+  const tokenIndex = new Map<string, number[]>();
+  const normalizedTexts = getNormalizedTexts(version);
+
+  normalizedTexts.forEach((text, docIndex) => {
+    const uniqueTokens = new Set(text.split(" ").filter((token) => token.length >= 2));
+    uniqueTokens.forEach((token) => {
+      const posting = tokenIndex.get(token);
+      if (!posting) {
+        tokenIndex.set(token, [docIndex]);
+        return;
+      }
+
+      posting.push(docIndex);
+    });
+  });
+
+  tokenIndexByVersion.set(version, tokenIndex);
+  return tokenIndex;
+}
+
+function intersectSortedArrays(left: number[], right: number[]) {
+  const result: number[] = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < left.length && j < right.length) {
+    const l = left[i];
+    const r = right[j];
+
+    if (l === r) {
+      result.push(l);
+      i += 1;
+      j += 1;
+      continue;
+    }
+
+    if (l < r) {
+      i += 1;
+    } else {
+      j += 1;
+    }
+  }
+
+  return result;
+}
+
 export function searchVersesFuzzy(query: string, limit = 8, version: BibleVersion = DEFAULT_BIBLE_VERSION): VerseDoc[] {
   const normalizedQuery = query.trim();
   if (!normalizedQuery) return [];
@@ -129,6 +180,7 @@ export function searchVersesSmart(
   };
 
   const parsedRef = parseRef(normalizedQuery, version);
+  const hasReferenceMatch = Boolean(parsedRef);
   if (parsedRef) {
     const exactOrder = orderByVerseId.get(parsedRef.id);
     const exactDoc = exactOrder !== undefined ? docs[exactOrder] : undefined;
@@ -151,22 +203,68 @@ export function searchVersesSmart(
   }
 
   const normalizedPhrase = normalizeText(normalizedQuery);
-  if (normalizedPhrase.length >= 2) {
+  const textExactIndexes: number[] = [];
+  if (normalizedPhrase.length >= 3) {
     const normalizedTexts = getNormalizedTexts(version);
-    normalizedTexts.forEach((normalizedVerse, index) => {
-      const phraseIndex = normalizedVerse.indexOf(normalizedPhrase);
+    const tokenIndex = getTokenIndex(version);
+    const phraseTokens = normalizedPhrase.split(" ").filter((token) => token.length >= 2);
+
+    let candidateIndexes: number[] = [];
+    if (phraseTokens.length > 0) {
+      const postings = phraseTokens
+        .map((token) => tokenIndex.get(token) ?? [])
+        .filter((posting) => posting.length > 0)
+        .sort((a, b) => a.length - b.length);
+
+      if (postings.length > 0) {
+        candidateIndexes = postings[0].slice();
+        for (let i = 1; i < postings.length; i += 1) {
+          candidateIndexes = intersectSortedArrays(candidateIndexes, postings[i]);
+          if (candidateIndexes.length === 0) {
+            break;
+          }
+        }
+      }
+    }
+
+    const scanIndexes = candidateIndexes.length > 0 ? candidateIndexes : [];
+
+    for (const index of scanIndexes) {
+      const phraseIndex = normalizedTexts[index].indexOf(normalizedPhrase);
       if (phraseIndex >= 0) {
         upsert(docs[index], "text_exact", phraseIndex);
+        textExactIndexes.push(index);
       }
-    });
+    }
   }
 
-  const fuzzyLimit = Math.max(limit * 4, 30);
-  getFuse(version)
-    .search(normalizedQuery, { limit: fuzzyLimit })
-    .forEach((result, index) => {
-      upsert(result.item, "text_fuzzy", (result.score ?? 1) + index / 10000);
-    });
+  if (textExactIndexes.length > 0) {
+    for (const baseIndex of textExactIndexes) {
+      const base = docs[baseIndex];
+
+      for (let offset = 1; offset <= 2; offset += 1) {
+        const prev = docs[baseIndex - offset];
+        const next = docs[baseIndex + offset];
+
+        if (prev && prev.book === base.book && prev.chapter === base.chapter) {
+          upsert(prev, "text_fuzzy", 0.5 + offset);
+        }
+        if (next && next.book === base.book && next.chapter === base.chapter) {
+          upsert(next, "text_fuzzy", 0.5 + offset);
+        }
+      }
+    }
+  }
+
+  const shouldRunFuzzy = !hasReferenceMatch && textExactIndexes.length === 0;
+  if (shouldRunFuzzy && normalizedQuery.length >= 2) {
+    const fuzzyLimit = Math.max(limit * 2, 20);
+    getFuse(version)
+      .search(normalizedQuery, { limit: fuzzyLimit })
+      .forEach((result, index) => {
+        upsert(result.item, "text_fuzzy", (result.score ?? 1) + index / 10000);
+      });
+  }
 
   return [...resultsMap.values()]
     .sort((a, b) => {

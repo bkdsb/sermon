@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { searchVersesSmart, type VerseSearchMatchKind } from "@/lib/bible/verseSearch";
 import type { BibleVersion } from "@/lib/bible/types";
 
@@ -18,8 +18,19 @@ const KIND_LABEL: Record<VerseSearchMatchKind, string> = {
 
 export default function BibleSearchBar({ version }: BibleSearchBarProps) {
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  const trimmedQuery = query.trim();
+  useEffect(() => {
+    const handle = window.setTimeout(() => {
+      setDebouncedQuery(query.trim());
+    }, 220);
+
+    return () => {
+      window.clearTimeout(handle);
+    };
+  }, [query]);
+
+  const trimmedQuery = debouncedQuery;
   const results = useMemo(() => {
     if (trimmedQuery.length < 2) return [];
     return searchVersesSmart(trimmedQuery, 30, version);
@@ -40,7 +51,7 @@ export default function BibleSearchBar({ version }: BibleSearchBarProps) {
         />
       </div>
 
-      {trimmedQuery.length > 0 && trimmedQuery.length < 2 ? (
+      {query.trim().length > 0 && query.trim().length < 2 ? (
         <p className="text-xs text-[var(--muted)]">Digite pelo menos 2 caracteres para buscar.</p>
       ) : null}
 

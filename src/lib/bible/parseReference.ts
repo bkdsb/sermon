@@ -77,7 +77,12 @@ export function refToId(
 }
 
 export function parseRef(rawRef: string, version: BibleVersion = DEFAULT_BIBLE_VERSION): ParsedRef | null {
-  const cleaned = rawRef.trim().replace(/^@/, "").replace(/^\[/, "").replace(/\]$/, "");
+  const cleaned = rawRef
+    .trim()
+    .replace(/^@/, "")
+    .replace(/^\[/, "")
+    .replace(/\]$/, "")
+    .replace(/[.,;!?]+$/, "");
   if (!cleaned) return null;
   const bookTokenPattern = "([0-9]?\\s*[A-Za-zÀ-ÿ]+(?:\\s+[A-Za-zÀ-ÿ]+)*)";
 
